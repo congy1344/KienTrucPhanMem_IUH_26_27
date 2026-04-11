@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  nodejs-app:
+    build: ./app
+    container_name: bai04-nodejs
+    ports:
+      - "3000:3000"

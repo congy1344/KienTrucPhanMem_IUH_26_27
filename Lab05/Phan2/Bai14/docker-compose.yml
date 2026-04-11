@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app1:
+    image: nginx:latest
+    container_name: bai14-app1
+    networks:
+      - my_private_network
+
+  app2:
+    image: nginx:latest
+    container_name: bai14-app2
+    networks:
+      - my_private_network
+
+networks:
+  my_private_network:
+    driver: bridge
