@@ -2,77 +2,47 @@ version: '3.8'
 
 services:
   vote:
-    image: python:3.9-slim
+    image: dockersamples/examplevotingapp_vote
     container_name: vote_frontend
-    restart: unless-stopped
-    working_dir: /app
-    volumes:
-      - ./vote:/app
-    command: bash -c "pip install flask && python app.py"
     ports:
-      - "5000:5000"
+      - "5000:80"
     networks:
-      - voting_net
+      - front-tier
+      - back-tier
 
   result:
-    image: node:18-alpine
+    image: dockersamples/examplevotingapp_result
     container_name: result_backend
-    restart: unless-stopped
-    working_dir: /app
-    volumes:
-      - ./result:/app
-    command: bash -c "npm install && node index.js"
     ports:
-      - "5001:5001"
-    depends_on:
-      - redis
+      - "5001:80"
     networks:
-      - voting_net
-
-  redis:
-    image: redis:7-alpine
-    container_name: redis_service
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    networks:
-      - voting_net
-    volumes:
-      - redis_data:/data
+      - front-tier
+      - back-tier
 
   worker:
-    image: openjdk:17-jdk-alpine
-    container_name: java_worker
-    restart: unless-stopped
-    working_dir: /app
-    volumes:
-      - ./worker:/app
-    command: bash -c "./gradlew run"
+    image: dockersamples/examplevotingapp_worker
+    container_name: worker_processor
     depends_on:
       - redis
-      - postgres
+      - db
     networks:
-      - voting_net
+      - back-tier
 
-  postgres:
-    image: postgres:13-alpine
+  redis:
+    image: redis:alpine
+    container_name: redis_queue
+    networks:
+      - back-tier
+
+  db:
+    image: postgres:15-alpine
     container_name: postgres_db
-    restart: unless-stopped
     environment:
-      POSTGRES_USER: voting_user
-      POSTGRES_PASSWORD: voting_pass
-      POSTGRES_DB: voting_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     networks:
-      - voting_net
-
-volumes:
-  redis_data:
-  postgres_data:
+      - back-tier
 
 networks:
-  voting_net:
-    driver: bridge
+  front-tier:
+  back-tier:

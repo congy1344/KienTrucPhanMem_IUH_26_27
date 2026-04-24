@@ -12,7 +12,7 @@ services:
   web:
     build: .
     container_name: django_app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python main.py
     volumes:
       - ./app:/app
     ports:
@@ -26,17 +26,13 @@ services:
 
   celery:
     build: .
-    container_name: celery_worker
-    command: celery -A core worker -l info
-    volumes:
-      - ./app:/app
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
+    command: celery -A tasks worker --loglevel=info
     depends_on:
       - redis
-      - web
-    networks:
+    networks:     
       - app_network
+
+
 
 networks:
   app_network:
