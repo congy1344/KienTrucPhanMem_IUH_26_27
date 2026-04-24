@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>React App - Bài 13</title>
 </head>
+
 <body>
     <div id="root"></div>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -15,7 +17,7 @@
             const [count, setCount] = React.useState(0);
             return (
                 <div style={{ textAlign: 'center', marginTop: '50px', fontFamily: 'Arial' }}>
-                    <h1>Hello from React with Nginx!</h1>
+                    <h1>Hello Co Thoa</h1>
                     <p>Ứng dụng React được serve bởi Nginx qua Docker Compose</p>
                     <button onClick={() => setCount(count + 1)} style={{ padding: '10px 20px', fontSize: '16px' }}>
                         Clicked: {count} times
@@ -26,4 +28,5 @@
         ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
 </body>
+
 </html>
